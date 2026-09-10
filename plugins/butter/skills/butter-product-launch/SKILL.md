@@ -42,8 +42,9 @@ Butter turns HTML + CSS into an editable Butter project. For every video this pl
    authoritative** — follow it exactly, and re-read it rather than relying on memory.
 2. Write ONE self-contained HTML document that plays itself: a single timeline, elements positioned
    in time with `animation-delay` measured from the start of the whole video, and
-   `animation-fill-mode: both` on every animation. CSS motion is unrestricted. JavaScript may play
-   audio but must never animate or restyle.
+   `animation-fill-mode: both` on every animation. CSS motion is unrestricted and read back
+   automatically. JavaScript may play audio; anything visual it drives is invisible to the
+   extractor, so its timing has to be declared by hand in the manifest.
 3. Call `submitSessionVersion` with the `sessionId` and the html. It returns a preview URL plus
    lint findings.
 4. Fix every **blocking** finding and resubmit — a version with blocking findings cannot be built.

@@ -103,6 +103,10 @@ Either way you get back a url. Put it in `fallbackPng`, `pngUrl` or `vidUrl` as 
       "fontFamily": "Poppins", "color": "#ffffff", "fontStyle": "800", "align": "center",
       "letterSpacing": -2, "lineHeight": 92, "xWidth": 41.2, "naturalLineHeight": 110,
       "startTimestamp": 0, "endTimestamp": 3,
+      "shadow": { "color": "#000000", "offsetX": 0, "offsetY": 4, "blur": 12, "opacity": 0.4 },
+      "stroke": { "color": "#000000", "width": 2 },
+      "textBackground": { "color": "#fecb2f", "paddingX": 20, "paddingY": 38,
+                          "cornerRadius": 65 },
       "visualEffects": [{ "type": "blur", "amount": 4 }] }
   ],
   "groups": [
@@ -130,6 +134,10 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
 - **`fontStyle` carries the measured weight.** Do not round 600 or 800 to 700; each weight maps to
   its own font variant.
 - **`shadow.opacity`** is the alpha of the measured shadow colour, with `color` its opaque form.
+- **A button, pill, chip or tag is one element**, so it is one text layer carrying
+  `textBackground` — its measured `background-color`, box padding and border radius, all in px.
+  Do not leave that paint in `animationCss`, which carries animation only, and do not emit a
+  second shape layer behind the text: the census counts one layer per element.
 - **Measuring `xWidth`:** set a canvas 2d context font to the element's computed font shorthand and
   take `measureText("x").width` — but measure at 1000px and scale back, because `measureText`
   quantises to whole pixels at display sizes and the raw figure can be several percent out. Letter
@@ -141,7 +149,8 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
   shorthand for all motion (`transform: translateY(60px) rotate(15deg)`), never the individual
   CSS transform properties (`translate`, `rotate`, `scale`) — the converter only recognises
   `transform`. Delays are relative to the layer's own `startTimestamp`: a layer starting at 5.0s
-  whose animation fires at 5.1s has a 0.1s delay here.
+  whose animation fires at 5.1s has a 0.1s delay here, and that delay is kept, so a
+  staggered group must carry one delay per layer.
 - **Shape fills** support `{ "type": "solid", "color": "#rrggbb" }` and
   `{ "type": "linear-gradient", "angle": <degrees>, "startPoint": {"x":<px>,"y":<px>}, "endPoint": {"x":<px>,"y":<px>}, "stops": [{ "color": "#rrggbb", "at": 0 }, …] }`
   with at least two stops and `at` values from 0 to 1. `startPoint` and `endPoint` are CSS pixels
