@@ -4,6 +4,9 @@
   "owner": {
     "name": "Butter"
   },
+  "interface": {
+    "displayName": "Butter (Beta)"
+  },
   "plugins": [
     {
       "name": "butter",

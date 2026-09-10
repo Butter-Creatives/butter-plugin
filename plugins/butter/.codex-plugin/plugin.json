@@ -16,7 +16,7 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Butter",
+    "displayName": "Butter (Beta)",
     "shortDescription": "Make videos that open as editable Butter projects",
     "longDescription": "Gathers context from the connectors you already have, writes the video as HTML and CSS, previews it in the conversation, and hands back an editable Butter project.",
     "developerName": "Butter",
