@@ -2,7 +2,7 @@
   "mcpServers": {
     "butter": {
       "type": "streamable-http",
-      "url": "https://mcp-staging.usebutter.com/mcp"
+      "url": "https://ai-staging.butter.video/mcp"
     }
   }
 }

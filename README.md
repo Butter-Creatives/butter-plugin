@@ -41,9 +41,13 @@ and the matching skill takes over.
 
 ## Status
 
-**Beta.** The Butter server is not deployed yet, so the skills load and guide the model but the
-tools cannot connect. Installing now is still useful for trying the workflows and telling us
-where the guidance is wrong.
+**Beta, and live.** The server runs at `ai-staging.butter.video`. A session goes end to end:
+the model writes the video, the preview plays inline, and finishing the session hands back a
+real Butter project you can open and edit.
+
+Two things to expect while it is in beta. Sessions expire after 24 hours, and the server is
+staging — treat anything you make as disposable. Tell us where the guidance is wrong; that is
+what this beta is for.
 
 ## This repo is generated
 

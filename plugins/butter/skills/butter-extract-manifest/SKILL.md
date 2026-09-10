@@ -33,24 +33,33 @@ The target engine draws vector shapes and live text natively.
 
 - **`<img>` and `<video>`** → `layers`, kind `img` or `vid`. Their `src` is already a hosted
   url — put it straight in `pngUrl` / `vidUrl`. Do not re-rasterize them.
-- **`<svg>`** → `layers`, kind `svg`. Put its `outerHTML` in `svgSource`, with every style it
-  depends on inlined so it stands alone. A PNG is only needed if it will not render standalone.
+- **`<svg>`** → `layers`, kind `svg`. Capture it to a transparent PNG, upload it, and put that url
+  in `pngUrl` — the raster is what gets drawn today. Also put its `outerHTML` in `svgSource`, with
+  every style it depends on inlined so it stands alone, so the same layer can become real vector
+  art later. A layer with no `pngUrl` is rejected.
 - **A text run** → `textLayers`, ALWAYS — even with a shadow, stroke or background. Record those as
   data rather than baking them in. Split into separate layers when one element mixes colours, fonts
   or weights; each text layer carries exactly one of each.
 - **Everything else that paints** (boxes, pills, discs, rules, cards, buttons, glows) →
   `shapeLayers` with its measured style. Only when a shape cannot be expressed natively — a blend
-  mode, `backdrop-filter`, `clip-path`, a radial or conic gradient, per-corner radii — capture a
-  transparent PNG cropped to its painted bounds, upload it, and set `preferFallback` with a
-  one-line reason.
+  mode, `backdrop-filter`, `clip-path`, a radial or conic gradient, per-corner radii, **a border** —
+  compute the painted bounds (the union of the element's DOM rect and any shadow or glow that spills
+  outside it), take a transparent PNG screenshot clipped to exactly those bounds, upload it, and set
+  `fallbackPng` to `{ "url": "<uploaded url>", "bbox": [x, y, w, h] }` where `bbox` is those same
+  painted bounds. Use those bounds as the clip rect and report them here — they travel with the image
+  so the engine can place it correctly even when it is larger than the shape's own `bbox`. Also set
+  `preferFallback` to a one-line reason. A shape that needs a raster and has none is drawn natively
+  without whatever needed it — a bordered pill loses its stroke — or dropped if it has no fill at all.
 - **Elements that paint nothing** (layout wrappers, `<br>`, `<defs>`) → `census.skipped`.
 
 ### Hosting an asset
 
 Two ways. Never inline image bytes into the manifest itself.
 
-1. **It already has an https url** — use it directly. Hotlinked `<img>` and `<video>` sources
-   need nothing, and that covers anything large: product photos, footage, brand assets.
+1. **It already has a public https url** — use it directly. Hotlinked `<img>` and `<video>` sources
+   need nothing, and that covers anything large: product photos, footage, brand assets. The build
+   fetches these from our servers, not from your machine, so `localhost`, `127.0.0.1` and any
+   other private address are rejected — serving the files yourself does not work.
 2. **Otherwise call `uploadSessionAsset`.** Pass `url` when the asset has one that may not last
    — a signed or expiring CDN link — and the server fetches it, with nothing binary crossing the
    conversation. Pass `dataBase64` only for bytes that exist nowhere else, such as a fallback
@@ -72,18 +81,29 @@ Either way you get back a url. Put it in `fallbackPng`, `pngUrl` or `vidUrl` as 
   "layers": [
     { "id": "l1", "label": "Product shot", "z": 0, "bbox": [0,0,100,100], "rotation": -3.4,
       "kind": "img", "pngUrl": "https://…", "startTimestamp": 0, "endTimestamp": 3,
-      "css": "0% {transform:translateY(60px);opacity:0} 100% {transform:none;opacity:1}" }
+      "animationCss": "0% {transform:translateY(60px);opacity:0} 100% {transform:none;opacity:1}",
+      "visualEffects": [{ "type": "drop-shadow", "color": "#000000", "offsetX": 0, "offsetY": 8, "blur": 12, "opacity": 0.4 }] }
   ],
   "shapeLayers": [
     { "id": "s1", "label": "Offer pill", "z": 3, "bbox": [0,0,100,100], "shape": "rectangle",
       "fill": { "type": "solid", "color": "#rrggbb" }, "cornerRadius": 48,
+      "startTimestamp": 0, "endTimestamp": 3 },
+    { "id": "s3", "label": "Gradient bar", "z": 2, "bbox": [0,800,1080,120], "shape": "rectangle",
+      "fill": { "type": "linear-gradient", "angle": 150,
+                "startPoint": {"x": -52, "y": 30}, "endPoint": {"x": 52, "y": -30},
+                "stops": [{ "color": "#ffffe0", "at": 0 }, { "color": "#ccd080", "at": 1 }] },
+      "startTimestamp": 0, "endTimestamp": 3 },
+    { "id": "s2", "label": "Glow ring", "z": 4, "bbox": [10,10,80,80], "shape": "circle",
+      "fill": { "type": "solid", "color": "#rrggbb" }, "preferFallback": "radial gradient",
+      "fallbackPng": { "url": "https://…/s2.png", "bbox": [-20,-20,120,120] },
       "startTimestamp": 0, "endTimestamp": 3 }
   ],
   "textLayers": [
     { "id": "t1", "text": "AIR MAX", "z": 5, "bbox": [0,0,100,100], "fontSize": 96,
       "fontFamily": "Poppins", "color": "#ffffff", "fontStyle": "800", "align": "center",
       "letterSpacing": -2, "lineHeight": 92, "xWidth": 41.2, "naturalLineHeight": 110,
-      "startTimestamp": 0, "endTimestamp": 3 }
+      "startTimestamp": 0, "endTimestamp": 3,
+      "visualEffects": [{ "type": "blur", "amount": 4 }] }
   ],
   "groups": [
     { "id": "g1", "label": "Offer badge", "members": ["s1","t1"],
@@ -114,9 +134,31 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
   take `measureText("x").width` — but measure at 1000px and scale back, because `measureText`
   quantises to whole pixels at display sizes and the raw figure can be several percent out. Letter
   spacing is derived by dividing by this number, so the error lands straight in the tracking.
-- **`css`** carries what the fields could not: animation and keyframes, and any leftover paint.
-  Inline every variable — no `var()`. Delays are relative to the layer's own
-  `startTimestamp`: a layer starting at 5.0s whose animation fires at 5.1s has a 0.1s delay here.
+- **`animationCss`** is strictly for keyframe animations — nothing else. Do not use it to set
+  fills, backgrounds, or any static paint; those belong in the typed fields (`fill`, `color`, etc.)
+  or in `fallbackPng`. Inline every variable — no `var()`. All values must be absolute — no
+  `em`, `rem`, `%`, `vw`, or other relative units; use `px` throughout. Use the `transform`
+  shorthand for all motion (`transform: translateY(60px) rotate(15deg)`), never the individual
+  CSS transform properties (`translate`, `rotate`, `scale`) — the converter only recognises
+  `transform`. Delays are relative to the layer's own `startTimestamp`: a layer starting at 5.0s
+  whose animation fires at 5.1s has a 0.1s delay here.
+- **Shape fills** support `{ "type": "solid", "color": "#rrggbb" }` and
+  `{ "type": "linear-gradient", "angle": <degrees>, "startPoint": {"x":<px>,"y":<px>}, "endPoint": {"x":<px>,"y":<px>}, "stops": [{ "color": "#rrggbb", "at": 0 }, …] }`
+  with at least two stops and `at` values from 0 to 1. `startPoint` and `endPoint` are CSS pixels
+  relative to the bbox center (positive x right, positive y down); read them from
+  `getComputedStyle()` and convert: for `linear-gradient(Xdeg, ...)` the start point is at
+  `(-sin(X)*len/2, cos(X)*len/2)` and end at `(sin(X)*len/2, -cos(X)*len/2)` where `len` covers
+  the element. When `startPoint` and `endPoint` are both provided `angle` is ignored by the renderer,
+  but always include it for completeness. Measure from `getComputedStyle()`; do not approximate
+  with `animationCss`.
+- **`visualEffects`** is the array for drop-shadows and blurs on any layer type. Both fields come
+  from `getComputedStyle()` — measure them, do not guess.
+  - Drop-shadow: `{ "type": "drop-shadow", "color": "<opaque hex>", "offsetX": <px>, "offsetY": <px>, "blur": <px>, "opacity": <0–1> }`.
+    `color` is the shadow colour without alpha; `opacity` is the alpha separately.
+    Source: `filter: drop-shadow(…)` or `box-shadow`.
+  - Blur: `{ "type": "blur", "amount": <px> }` where `amount` is the CSS pixel radius from
+    `filter: blur(<px>)` as returned by `getComputedStyle()`. Use this for frosted-glass
+    or defocus effects — never put filter values in `animationCss`.
 - Use `\n` for line breaks inside text.
 - Text inside an element you rasterized must NOT also appear in `textLayers`.
 - `z` is one shared paint order across `layers`, `shapeLayers` and `textLayers`; 0 is backmost.
