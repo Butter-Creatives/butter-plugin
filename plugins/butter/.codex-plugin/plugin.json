@@ -1,0 +1,34 @@
+{
+  "name": "butter",
+  "version": "1.0.0",
+  "description": "Turn a brief into an editable Butter video project.",
+  "author": {
+    "name": "Butter"
+  },
+  "homepage": "https://usebutter.com",
+  "license": "Proprietary",
+  "keywords": [
+    "video",
+    "ads",
+    "creative",
+    "motion"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Butter",
+    "shortDescription": "Make videos that open as editable Butter projects",
+    "longDescription": "Gathers context from the connectors you already have, writes the video as HTML and CSS, previews it in the conversation, and hands back an editable Butter project.",
+    "developerName": "Butter",
+    "category": "Productivity",
+    "websiteURL": "https://usebutter.com",
+    "composerIcon": "./assets/web-app-manifest-192x192.png",
+    "logo": "./assets/web-app-manifest-512x512.png",
+    "brandColor": "#f4ed36",
+    "defaultPrompt": [
+      "Find what is working in my Meta ads and make three more to test",
+      "Turn my best static ad into a motion ad",
+      "Make a launch video for our newest product"
+    ]
+  }
+}

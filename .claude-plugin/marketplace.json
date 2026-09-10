@@ -1,0 +1,21 @@
+{
+  "name": "butter-beta",
+  "description": "Butter — make videos that open as editable Butter projects.",
+  "owner": {
+    "name": "Butter"
+  },
+  "plugins": [
+    {
+      "name": "butter",
+      "source": {
+        "source": "local",
+        "path": "./plugins/butter"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
