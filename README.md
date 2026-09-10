@@ -2,8 +2,7 @@
 
 Make videos in ChatGPT that open as **editable Butter projects**.
 
-Butter gathers context from the connectors you already have, writes the video as HTML and CSS,
-previews it in the conversation, and hands back a project you can keep editing.
+Butter gathers context, generates the video and hands back a fully editable project you can keep editing.
 
 ## Install in ChatGPT
 
