@@ -8,8 +8,7 @@ Butter gathers context, generates the video and hands back a fully editable proj
 
 Plugins need ChatGPT **Plus, Pro, Business, Enterprise or Edu** — they are not available on Free.
 
-1. Open **Settings → Security and login** and turn on **Developer mode**.
-2. Go to **Plugins → Add → Add a marketplace**:
+1. Go to **Plugins → Add → Add a marketplace**:
 
    | Field | Value |
    | --- | --- |
@@ -17,8 +16,8 @@ Plugins need ChatGPT **Plus, Pro, Business, Enterprise or Edu** — they are not
    | Git ref | *leave blank* |
    | Sparse paths | *leave blank* |
 
-3. Press **Add marketplace**. **Butter (Beta)** appears under the Marketplace tab.
-4. Switch to the **Plugins** tab, search **Butter**, and press **+** to install it.
+2. Press **Add marketplace**. **Butter (Beta)** appears under the Marketplace tab.
+3. Switch to the **Plugins** tab, search **Butter**, and press **+** to install it.
 
 To pick up a new release later, press **Upgrade** on the Butter (Beta) marketplace.
 
