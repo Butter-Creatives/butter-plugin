@@ -1,6 +1,6 @@
 # Butter plugin
 
-Make videos in ChatGPT or Claude that open as **editable Butter projects**.
+Make videos in ChatGPT that open as **editable Butter projects**.
 
 Butter gathers context from the connectors you already have, writes the video as HTML and CSS,
 previews it in the conversation, and hands back a project you can keep editing.
@@ -22,12 +22,6 @@ Plugins need ChatGPT **Plus, Pro, Business, Enterprise or Edu** — they are not
 4. Switch to the **Plugins** tab, search **Butter**, and press **+** to install it.
 
 To pick up a new release later, press **Upgrade** on the Butter (Beta) marketplace.
-
-## Install in Claude Code
-
-```
-/plugin marketplace add https://github.com/Butter-Creatives/butter-plugin.git
-```
 
 ## What you get
 
