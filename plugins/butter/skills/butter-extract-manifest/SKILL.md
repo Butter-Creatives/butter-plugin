@@ -5,14 +5,21 @@ description: Measure a Butter preview into the manifest endSession requires. Use
 
 # Measure a Butter preview into a manifest
 
-`submitSessionVersion` returned a `previewUrl`. Open it in a browser and measure it, producing
-the JSON `endSession` takes as its `manifest` argument.
+`submitSessionVersion` returned a `rawUrl` alongside the `previewUrl`. Open the
+**`rawUrl`** in a browser and measure it, producing the JSON `endSession` takes as its
+`manifest` argument. The `previewUrl` is the same document scaled down to fit a panel, inside
+a frame — measure that one and every number comes back scaled, or comes back empty.
 
 **CRITICAL RULE: every number must be MEASURED from the live DOM** — `getBoundingClientRect()` and
 `getComputedStyle()` in the page you opened. Never estimate, recall, or copy numbers out of the CSS
 source. If you cannot measure something, omit it and record it in `census.skipped`. A number you
 guessed is worse than one you left out: it produces a project that is subtly wrong everywhere, with
 no error to point at.
+
+**The one exception is motion.** `animationCss` is copied from the page, not measured: each
+element's `animation` declaration and the `@keyframes` it names, exactly as the stylesheet has
+them. It is never omitted. Every element that animates carries it, and `endSession` rejects a
+manifest that drops the page's motion.
 
 All geometry in CSS pixels at device scale factor 1, relative to the top-left of the
 `[data-butter-canvas]` element — not the viewport.
@@ -26,6 +33,8 @@ One self-playing HTML file on a single timeline. `[data-butter-canvas]` carries 
 Because it plays itself, **seek before you measure**: pause every animation with
 `document.getAnimations()`, set `currentTime` into the middle of a layer's own window, and measure
 there. Measuring at time zero records an entrance's starting position as the layer's real position.
+If you cannot seek, say so in `warnings`: that changes where geometry is measured, never whether
+motion is carried.
 
 ## Rasterize as little as possible
 
@@ -75,13 +84,13 @@ Either way you get back a url. Put it in `fallbackPng`, `pngUrl` or `vidUrl` as 
   "canvas": { "w": 1080, "h": 1920 },
   "scenes": [
     { "startTimestamp": 0, "endTimestamp": 3,
-      "transition": { "type": "fade", "duration": 0.4 } }
+      "transition": { "type": "full-screen-slide-transition", "duration": 0.4, "direction": "right" } }
   ],
   "background": { "color": "#rrggbb" },
   "layers": [
     { "id": "l1", "label": "Product shot", "z": 0, "bbox": [0,0,100,100], "rotation": -3.4,
       "kind": "img", "pngUrl": "https://…", "startTimestamp": 0, "endTimestamp": 3,
-      "animationCss": "0% {transform:translateY(60px);opacity:0} 100% {transform:none;opacity:1}",
+      "animationCss": "animation: rise 0.7s ease-out 0.15s both; @keyframes rise { 0% {transform:translateY(60px);opacity:0} 100% {transform:none;opacity:1} }",
       "visualEffects": [{ "type": "drop-shadow", "color": "#000000", "offsetX": 0, "offsetY": 8, "blur": 12, "opacity": 0.4 }] }
   ],
   "shapeLayers": [
@@ -105,8 +114,6 @@ Either way you get back a url. Put it in `fallbackPng`, `pngUrl` or `vidUrl` as 
       "startTimestamp": 0, "endTimestamp": 3,
       "shadow": { "color": "#000000", "offsetX": 0, "offsetY": 4, "blur": 12, "opacity": 0.4 },
       "stroke": { "color": "#000000", "width": 2 },
-      "textBackground": { "color": "#fecb2f", "paddingX": 20, "paddingY": 38,
-                          "cornerRadius": 65 },
       "visualEffects": [{ "type": "blur", "amount": 4 }] }
   ],
   "groups": [
@@ -134,15 +141,17 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
 - **`fontStyle` carries the measured weight.** Do not round 600 or 800 to 700; each weight maps to
   its own font variant.
 - **`shadow.opacity`** is the alpha of the measured shadow colour, with `color` its opaque form.
-- **A button, pill, chip or tag is one element**, so it is one text layer carrying
-  `textBackground` — its measured `background-color`, box padding and border radius, all in px.
-  Do not leave that paint in `animationCss`, which carries animation only, and do not emit a
-  second shape layer behind the text: the census counts one layer per element.
+- **A button, pill, chip or tag** has its background emitted as a `shapeLayer` (rectangle with
+  the measured fill color and corner radius) placed directly behind the text layer. The text layer
+  carries only the text properties. Do not use `animationCss` for background paint.
 - **Measuring `xWidth`:** set a canvas 2d context font to the element's computed font shorthand and
   take `measureText("x").width` — but measure at 1000px and scale back, because `measureText`
   quantises to whole pixels at display sizes and the raw figure can be several percent out. Letter
   spacing is derived by dividing by this number, so the error lands straight in the tracking.
-- **`animationCss`** is strictly for keyframe animations — nothing else. Do not use it to set
+- **`animationCss`** is strictly for keyframe animations — nothing else. It holds the element's
+  `animation` declaration and every `@keyframes` block that declaration names, read from
+  `document.styleSheets` (or the `animation-*` longhands from `getComputedStyle()`); a bare
+  keyframe list with no `animation` declaration converts to nothing. Do not use it to set
   fills, backgrounds, or any static paint; those belong in the typed fields (`fill`, `color`, etc.)
   or in `fallbackPng`. Inline every variable — no `var()`. All values must be absolute — no
   `em`, `rem`, `%`, `vw`, or other relative units; use `px` throughout. Use the `transform`
@@ -151,6 +160,11 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
   `transform`. Delays are relative to the layer's own `startTimestamp`: a layer starting at 5.0s
   whose animation fires at 5.1s has a 0.1s delay here, and that delay is kept, so a
   staggered group must carry one delay per layer.
+- **A scene's own animation is its transition**, not layer motion. When a `[data-scene]` fades or
+  pans out as the next one comes in, set `transition` on the outgoing scene — `"cross-fade"` for
+  an opacity cross-fade, or `"full-screen-slide-transition"` (with a required `"direction"`:
+  `"left"`, `"right"`, `"up"`, or `"down"`) for a directional pan — with its `duration` in
+  seconds. A hard cut has no transition. Never copy a scene's animation onto the layers inside it.
 - **Shape fills** support `{ "type": "solid", "color": "#rrggbb" }` and
   `{ "type": "linear-gradient", "angle": <degrees>, "startPoint": {"x":<px>,"y":<px>}, "endPoint": {"x":<px>,"y":<px>}, "stops": [{ "color": "#rrggbb", "at": 0 }, …] }`
   with at least two stops and `at` values from 0 to 1. `startPoint` and `endPoint` are CSS pixels
@@ -168,7 +182,11 @@ Timestamps are in seconds and **relative to the whole video**, never to the scen
   - Blur: `{ "type": "blur", "amount": <px> }` where `amount` is the CSS pixel radius from
     `filter: blur(<px>)` as returned by `getComputedStyle()`. Use this for frosted-glass
     or defocus effects — never put filter values in `animationCss`.
-- Use `\n` for line breaks inside text.
+- **Text line breaks:** insert `\n` in `text` wherever the text visually wraps in the live DOM.
+  Pause the animation and seek to a mid-layer time, then use `getClientRects()` on the element (or
+  on individual text nodes via a `Range`) to find where each visual line starts and ends. Split the
+  string at those boundaries and join with `\n`. Do not guess from character count or bbox width —
+  measure the actual rects.
 - Text inside an element you rasterized must NOT also appear in `textLayers`.
 - `z` is one shared paint order across `layers`, `shapeLayers` and `textLayers`; 0 is backmost.
 
@@ -185,7 +203,9 @@ reads as one object, not by what is merely nearby. When in doubt leave it ungrou
 `census.positionedElements` must equal `census.emitted` plus `census.skipped.length`, where
 emitted counts background plus every layer, shape and text layer. **`endSession` rejects a manifest
 that does not balance**, and the fix is to re-measure — never to adjust the numbers until the check
-passes. Scene windows must meet exactly: each scene's end is the next one's start.
+passes. Scene windows must meet exactly: each scene's end is the next one's start. It also rejects
+a manifest where no layer carries `animationCss` while the page animates anything besides its
+scenes: the fix is to copy the motion across, not to re-measure.
 
 Then call `endSession` with the session id, the approved version id, and this manifest. Report the
 census numbers, how many shapes versus rasters you emitted, and any warnings.

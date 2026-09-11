@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Butter (Beta)",
     "shortDescription": "Make videos that open as editable Butter projects",
-    "longDescription": "Gathers context from the connectors you already have, writes the video as HTML and CSS, previews it in the conversation, and hands back an editable Butter project.",
+    "longDescription": "Gathers context from the connectors you already have, writes the video as HTML and CSS, hands you a live preview link, and turns it into an editable Butter project.",
     "developerName": "Butter",
     "category": "Productivity",
     "websiteURL": "https://usebutter.com",

@@ -49,9 +49,12 @@ Butter turns HTML + CSS into an editable Butter project. For every video this pl
    lint findings.
 4. Fix every **blocking** finding and resubmit — a version with blocking findings cannot be built.
    Warnings are safe to ship but cost editability, so prefer fixing them.
-5. Give the user the preview URL, and iterate on their feedback by submitting further versions to
-   the same session.
-6. Only once the user says they are happy, follow the **butter-extract-manifest** skill to measure
+5. Call `renderPreviews` with the session and version ids. That is what puts the videos in front
+   of the user — submitting a version shows them nothing. Pass several at once whenever they are
+   meant to be compared, each with a short label saying what makes it different.
+6. Offer the next steps — Refine, Make Variations, or Edit in Butter — and wait for their answer rather than picking one.
+   Refinements are further versions in the same session; variations get a session each.
+7. Only once the user says they are happy, follow the **butter-extract-manifest** skill to measure
    the approved preview, then call `endSession` with the session id, the version id and that
    manifest. Do not call it on your own judgement — the preview is theirs to approve, and a project
    is created every time you call it.
