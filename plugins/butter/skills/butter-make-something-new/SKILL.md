@@ -1,18 +1,18 @@
 ---
-name: butter-ad-multiplier
-description: Find what's winning and make the next 3 ads to test. Use when the user wants more ads based on what is already winning, asks for variants of a top performer, or wants the next batch of creative tests.
+name: butter-make-something-new
+description: Make a new ad or video from scratch, or from assets you already have. Use when the user explicitly wants an ad or video built from scratch, or wants photos, clips or product shots they already have turned into an ad — not for a vague request that names no starting point, which butter-ambiguous-start handles.
 ---
 
-# Ad Multiplier
+# Make Something New
 
-Find what's winning and make the next 3 ads to test.
+Make a new ad or video from scratch, or from assets you already have.
 
 ## Before you start
 
 Anything the user has already told you, or that the sources under "Gather first" already cover, is known — do not ask for it again; if nothing is missing, go straight to "Gather first". Otherwise ask for what is still missing with `askQuestions`, once, before gathering: pass only the questions below that are still unknown, and add your own for anything else you cannot build without — give an option shaped { "label": "…", "input": "url" } when the answer is a link, { "label": "…", "input": "upload" } when the user should provide a file, and leave out options for free text. Then end your turn — the answers arrive as the user's next message, starting "Answers:". Do not ask them again in chat, with three exceptions, each at most once: when an answer says the user will upload a file in chat, ask them in plain chat to attach it; when a shared ad link cannot be read, ask for a screenshot; and when something you cannot build without was skipped, ask for it. Keep any attached file and upload it with `uploadSessionAsset` once `startSession` has run. Do not call `startSession` before the answers arrive. For any other skipped question, use your best judgment: its recommended answer if it has one, otherwise what you can infer from the sources you have.
 
 ```json
-{"questions":[{"title":"Which winning ad should I build on?","options":["Use my top ad from a connected source",{"label":"Link to the ad","input":"url"},{"label":"Upload it in chat","input":"upload"}]},{"title":"Where should the assets, product details and copy come from?","options":["Use my website (recommended)",{"label":"Upload my images in chat","input":"upload"},"Use a connected source"]},{"title":"How long should the video be?","options":["Match the source ad (recommended)","6 seconds","15 seconds","30 seconds"]}]}
+{"questions":[{"title":"What should I use as a visual reference?","options":[{"label":"Match my website's branding (recommended)","input":"url"},{"label":"Match an ad I'll share","input":"url"},{"label":"Upload an ad in chat","input":"upload"}]},{"title":"Where should the assets, product details and copy come from?","options":["Use my website (recommended)",{"label":"Upload my images in chat","input":"upload"},"Use a connected source"]},{"title":"What format would you like?","options":["Vertical 9:16 (recommended)","Square 1:1","Landscape 16:9"]},{"title":"How long should the video be?","options":["15 seconds (recommended)","6 seconds","30 seconds"]}]}
 ```
 
 ## Gather first
@@ -20,7 +20,6 @@ Anything the user has already told you, or that the sources under "Gather first"
 Butter does not supply this data — it comes from the connectors already available to you, or from
 what the user provides.
 
-- Top creatives from the last 30 days with spend, CTR and ROAS, from an ads connector (Meta, TikTok…)
 - The brand palette, logo and typeface from the brand kit or the site
 
 If a source is unavailable, say so and ask the user for it rather than inventing figures. Never
@@ -28,19 +27,19 @@ invent an offer, a price, a discount, or a performance claim the user did not gi
 
 ## Hold constant
 
-The winning layout, palette and offer structure
+The brand system, and any reference the user gives
 
 ## Vary
 
-Hook, proof and CTA — one axis per variant, so a win is attributable
+Concept, hook, pacing and motion
 
 ## How many
 
-3
+1
 
 ## Format
 
-The source ad's placements
+Use the format answer; default to vertical 9:16
 
 ## Building each video
 
@@ -83,4 +82,4 @@ For every video this workflow calls for:
 
 ## Handoff
 
-One session per variant; three Butter projects
+One session; offer variations once the first is approved
