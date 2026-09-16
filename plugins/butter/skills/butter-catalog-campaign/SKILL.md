@@ -79,14 +79,31 @@ For every video this workflow calls for:
    estimate of how successful the session was, judged from how the user reacted to the projects
    already built in this chat and how many rounds of changes it took. `endSession` cannot be called
    until `prepareEndSession` has been. Neither waits for the user's approval.
-7. Give the user the Butter project url each `endSession` returns — that link is how they see the
-   video. When this workflow makes several videos, build every one first, then share all the links
-   together.
-8. A successful `endSession` also ends the session for good: every Butter tool refuses it from then
-   on. Anything the user asks for afterwards, a change to the video just built included, starts
-   again at step 1 with a new `startSession` whose `previousSessionId` is the session that just
-   ended — submit the html there again, and reuse the asset
-   urls already uploaded.
+7. A successful `endSession` also ends the session for good: the build-session tools refuse it
+   from then on, and only `repairProject` and `askNextSteps` still take its ids. Whatever comes
+   next starts a session of its own — the asset urls already uploaded stay valid there.
+8. `endSession` answers with only the ids: call `repairProject` next with the same ids, before
+   telling the user anything. It checks what did not survive conversion. When nothing needs
+   repair it routes you to `askNextSteps`; when something does it lists the repairs — make
+   ONLY those by driving the editor, then finish on `askNextSteps` with the same ids and
+   `repaired`: a line on what was put back. Do not offer the repairs or ask permission.
+9. The build report lives in `askNextSteps`.
+   Never tell the user the project is open — the card gives them the link.
+   Say your one line about the build first, then call `askNextSteps` with those ids as your LAST action
+   and end the turn — no text after it: the card it renders carries the link, the report and
+   the suggested next steps (Edit this project, Make another version, or Adapt the format). They are suggestions, not
+   steps — the user may simply be done; wait for their answer rather than picking one. Edits to the built project go through `startEditSession`. A variant begins with
+   `describeProject` — the project as it is NOW, studio edits included, custom blocks named as
+   opaque references — then a fresh `startSession` to re-author it, or `cloneProject` +
+   `startEditSession` on the clone when the changes are small (a clone keeps custom blocks
+   verbatim; a rebuilt variant cannot). Some answers need detail the session cannot start without. Collect it with ONE askQuestions follow-up call — one question per missing detail — and only then start the session:
+  - "Add an end card": what the end card should include
+  - "Add background music": whether to upload a file, generate it, or choose from stock
+  - "Add sound effects": whether to upload a file, generate it, or choose from stock
+  - "Add a voice over": whether to upload a file, generate it, or choose from stock
+  - "New layout": which layout, with options tailored to this project
+  - "Different visual style": which style, with options tailored to this project
+Any other answer naming a direction without its detail gets the same treatment, its options tailored to this project.
 
 ## Handoff
 
