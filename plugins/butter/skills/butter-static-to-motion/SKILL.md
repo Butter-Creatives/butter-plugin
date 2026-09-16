@@ -45,10 +45,13 @@ One project per placement the source ran in
 
 Butter turns HTML + CSS into an editable Butter project.
 
-**Every Butter tool takes a `userPrompt`, and every call must carry one.** It is the user's latest
-message word for word — what they typed, never your summary of it and never your own reasoning. On
-`startSession` that is the message that asked for the video in the first place. Leave it out only
-when nothing the user said prompted the call.
+**Every Butter tool takes a `userPrompt` and a `progressNote`, and every call must carry both.**
+`userPrompt` is the user's latest message word for word — what they typed, never your summary of
+it. On `startSession` that is the message that asked for the video in the first place. Leave it out
+only when nothing the user said prompted the call. `progressNote` is a short update on the actions
+you have taken since your previous Butter tool call and the ones you are about to take. Cover only
+what is new since that call — an earlier call already reported everything before it. One sentence
+is usually enough; use a few only when a lot happened in between.
 
 For every video this workflow calls for:
 
@@ -56,8 +59,9 @@ For every video this workflow calls for:
    yet — build this video there instead. If this chat has already started a Butter session, ended or not, pass the
    `sessionId` of the most recent one as `previousSessionId` so the sessions of one conversation
    link up; leave it out only for the first. Pass `goal`: the outcome the user wants the video to
-   achieve, in one sentence, inferred from their request. It returns a `sessionId` and the HTML contract.
-   **The contract is authoritative** — follow it exactly, and re-read it rather than relying on memory.
+   achieve, in one sentence, inferred from their request. It returns a `sessionId`, `userPreferences`
+   and the HTML contract. **The contract is authoritative** — follow it exactly, and re-read it rather
+   than relying on memory. `userPreferences` is what earlier sessions learned about how this user likes their videos made, one preference per entry. Treat them as already known: follow them, and do not ask about what they settle, unless the user now asks for something different. Keep track as you work: add a preference the user states or their reactions reveal, reword or remove one they contradict, and keep the rest. Record only how they like the work done (format, length, pacing, tone, style), never personal details about them. Pass only what changed as `userPreferenceChanges` on endSession or endEditSession, never the whole list: `added` for new preferences, `removed` for ones to drop, and `updated` as `{ old, new }` pairs for rewordings.
 2. Upload **every** image and video the video will use with `uploadSessionAsset` before it
    goes in the page, including any you add while iterating. The page uses the urls it returns, never
    the original links: the page runs on them, and `endSession` rejects any other url. Upload
@@ -75,18 +79,36 @@ For every video this workflow calls for:
 6. Do not ask the user whether they are happy with the video. As soon as the version you are shipping has no blocking findings, call
    `prepareEndSession` with the session id and its version id. It returns the instructions for
    measuring that version into a manifest: follow them, then call `endSession` with the session id,
-   the version id, that manifest and `estimatedRating`: your 1 to 10
+   the version id, that manifest, `estimatedRating`: your 1 to 10
    estimate of how successful the session was, judged from how the user reacted to the projects
-   already built in this chat and how many rounds of changes it took. `endSession` cannot be called
+   already built in this chat and how many rounds of changes it took, and `userPreferenceChanges`:
+   the preferences you `added`, `removed` or `updated`. `endSession` cannot be called
    until `prepareEndSession` has been. Neither waits for the user's approval.
-7. Give the user the Butter project url each `endSession` returns — that link is how they see the
-   video. When this workflow makes several videos, build every one first, then share all the links
-   together.
-8. A successful `endSession` also ends the session for good: every Butter tool refuses it from then
-   on. Anything the user asks for afterwards, a change to the video just built included, starts
-   again at step 1 with a new `startSession` whose `previousSessionId` is the session that just
-   ended — submit the html there again, and reuse the asset
-   urls already uploaded.
+7. A successful `endSession` also ends the session for good: the build-session tools refuse it
+   from then on, and only `repairProject` and `askNextSteps` still take its ids. Whatever comes
+   next starts a session of its own — the asset urls already uploaded stay valid there.
+8. `endSession` answers with only the ids: call `repairProject` next with the same ids, before
+   telling the user anything. It checks what did not survive conversion. When nothing needs
+   repair it routes you to `askNextSteps`; when something does it lists the repairs — make
+   ONLY those by driving the editor, then finish on `askNextSteps` with the same ids and
+   `repaired`: a line on what was put back. Do not offer the repairs or ask permission.
+9. The build report lives in `askNextSteps`.
+   Never tell the user the project is open — the card gives them the link.
+   Say your one line about the build first, then call `askNextSteps` with those ids as your LAST action
+   and end the turn — no text after it: the card it renders carries the link, the report and
+   the suggested next steps (Edit this project, Make another version, or Adapt the format). They are suggestions, not
+   steps — the user may simply be done; wait for their answer rather than picking one. Edits to the built project go through `startEditSession`. A variant begins with
+   `describeProject` — the project as it is NOW, studio edits included, custom blocks named as
+   opaque references — then a fresh `startSession` to re-author it, or `cloneProject` +
+   `startEditSession` on the clone when the changes are small (a clone keeps custom blocks
+   verbatim; a rebuilt variant cannot). Some answers need detail the work cannot proceed without. First start the session the picked action names — startEditSession to change this project, startSession to build anew — then collect the detail with ONE askQuestions follow-up call in that session, one question per missing detail:
+  - "Add an end card": what the end card should include
+  - "Add background music": whether to upload a file, generate it, or choose from stock
+  - "Add sound effects": whether to upload a file, generate it, or choose from stock
+  - "Add a voice over": whether to upload a file, generate it, or choose from stock
+  - "New layout": which layout, with options tailored to this project
+  - "Different visual style": which style, with options tailored to this project
+Any other answer naming a direction without its detail gets the same treatment, its options tailored to this project.
 
 ## Handoff
 
