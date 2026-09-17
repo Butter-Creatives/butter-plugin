@@ -40,13 +40,15 @@ and the matching skill takes over.
 
 ## Status
 
-**Beta, and live.** The server runs at `ai-staging.butter.video`. A session goes end to end:
-the model writes the video, the preview plays inline, and finishing the session hands back a
-real Butter project you can open and edit.
+**Beta, and live.** The server runs at `ai.butter.video`. A session goes end to end: the model
+writes the video, the preview plays inline, and finishing the session hands back a real Butter
+project you can open and edit.
 
-Two things to expect while it is in beta. Sessions expire after 24 hours, and the server is
-staging — treat anything you make as disposable. Tell us where the guidance is wrong; that is
-what this beta is for.
+One thing to expect while it is in beta: sessions expire after 24 hours. Tell us where the
+guidance is wrong; that is what this beta is for.
+
+Internal testing runs against staging from the same marketplace URL with **Git ref** `staging`,
+which installs as **Butter (Staging)** alongside this one.
 
 ## This repo is generated
 
