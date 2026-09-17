@@ -7,12 +7,7 @@
   },
   "homepage": "https://usebutter.com",
   "license": "Proprietary",
-  "keywords": [
-    "video",
-    "ads",
-    "creative",
-    "motion"
-  ],
+  "keywords": ["video", "ads", "creative", "motion"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
