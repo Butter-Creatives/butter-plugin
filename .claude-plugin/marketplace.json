@@ -1,11 +1,11 @@
 {
-  "name": "butter-beta",
+  "name": "butter-staging",
   "description": "Butter — make videos that open as editable Butter projects.",
   "owner": {
     "name": "Butter"
   },
   "interface": {
-    "displayName": "Butter (Beta)"
+    "displayName": "Butter (Staging)"
   },
   "plugins": [
     {
