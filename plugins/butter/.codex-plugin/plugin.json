@@ -21,7 +21,13 @@
     "longDescription": "Butter is the video editor that lets you and your team collaborate with AI. The Butter MCP can pull in your assets and context and help you create ads with professional motion. You can continue to edit any Butter project in the browser with full manual control: change copy, move things around on canvas, retime on the timeline, and more. Use AI to help you move fast, and never lose control or quality.",
     "developerName": "Butter",
     "category": "Creativity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://www.butter.video",
+    "privacyPolicyURL": "https://www.iubenda.com/privacy-policy/82204341",
+    "termsOfServiceURL": "https://www.butter.video/terms-of-service",
     "composerIcon": "./assets/web-app-manifest-192x192.png",
     "logo": "./assets/web-app-manifest-512x512.png",
     "brandColor": "#E9D352",
