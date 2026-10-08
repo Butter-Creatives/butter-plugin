@@ -1,11 +1,11 @@
 {
   "name": "butter",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Turn a brief into an editable Butter video project.",
   "author": {
     "name": "Butter"
   },
-  "homepage": "https://usebutter.com",
+  "homepage": "https://www.butter.video",
   "license": "Proprietary",
   "keywords": [
     "video",
@@ -13,6 +13,10 @@
     "creative",
     "motion"
   ],
+  "displayName": "Butter (Staging)",
+  "icon": "./assets/web-app-manifest-512x512.png",
+  "privacyPolicyUrl": "https://www.iubenda.com/privacy-policy/82204341",
+  "termsOfServiceUrl": "https://www.butter.video/terms-of-service",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }

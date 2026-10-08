@@ -1,11 +1,11 @@
 {
-  "name": "butter",
-  "version": "1.0.0",
+  "name": "app-6aa99efe80b48191a87d2cc21193994e",
+  "version": "1.0.3",
   "description": "Turn a brief into an editable Butter video project.",
   "author": {
     "name": "Butter"
   },
-  "homepage": "https://usebutter.com",
+  "homepage": "https://www.butter.video",
   "license": "Proprietary",
   "keywords": [
     "video",
@@ -18,16 +18,21 @@
   "interface": {
     "displayName": "Butter (Staging)",
     "shortDescription": "Make editable videos",
-    "longDescription": "Butter is the video editor that lets you and your team collaborate with AI. The Butter MCP can pull in your assets and context and help you create ads with professional motion. You can continue to edit any Butter project in the browser with full manual control: change copy, move things around on canvas, retime on the timeline, and more. Use AI to help you move fast, and never lose control or quality.",
+    "longDescription": "Butter is the video editor that lets you and your team collaborate with AI. The Butter MCP can pull in your assets and context and help you create ads with professional motion. You can continue to edit any Butter project in the browser with full manual control: change copy, move things around on canvas, retime on the timeline, and more. Use AI to help you move fast without having to give up control.",
     "developerName": "Butter",
     "category": "Creativity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://www.butter.video",
+    "privacyPolicyURL": "https://www.iubenda.com/privacy-policy/82204341",
+    "termsOfServiceURL": "https://www.butter.video/terms-of-service",
     "composerIcon": "./assets/web-app-manifest-192x192.png",
     "logo": "./assets/web-app-manifest-512x512.png",
-    "brandColor": "#E9D352",
+    "brandColor": "#4EABE5",
     "defaultPrompt": [
-      "Find what is working in my Meta ads and make three more to test",
-      "Turn my best static ad into a motion ad",
+      "Turn my static ad into a motion ad",
       "Make a launch video for our newest product"
     ]
   }

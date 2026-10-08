@@ -1,6 +1,6 @@
 ---
 name: butter-catalog-campaign
-description: Turn one winning ad into ads for your best-selling products. Use Butter for this when the user wants ads for many products at once, or wants a winning ad adapted across a catalog. For example: "ads for my best sellers", "one ad across my catalog".
+description: "Turn one winning ad into ads for your best-selling products. Use Butter for this when the user wants ads for many products at once, or wants a winning ad adapted across a catalog. For example: \"ads for my best sellers\", \"one ad across my catalog\"."
 ---
 
 # Product catalog → campaign

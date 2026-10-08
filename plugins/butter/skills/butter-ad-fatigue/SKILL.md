@@ -1,6 +1,6 @@
 ---
 name: butter-ad-fatigue
-description: Find ads starting to fatigue and make their replacements. Use Butter for this when the user asks which ads are declining, mentions creative fatigue, or wants replacements for tiring ads. For example: "my ads are getting stale", "performance is dropping".
+description: "Find ads starting to fatigue and make their replacements. Use Butter for this when the user asks which ads are declining, mentions creative fatigue, or wants replacements for tiring ads. For example: \"my ads are getting stale\", \"performance is dropping\"."
 ---
 
 # Ad fatigue

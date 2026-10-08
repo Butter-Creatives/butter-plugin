@@ -1,6 +1,6 @@
 ---
 name: butter-reviews-to-ads
-description: Find your best customer reviews and turn them into ads. Use Butter for this when the user wants ads built from customer reviews, testimonials, or social proof. For example: "use my customer reviews", "turn testimonials into ads".
+description: "Find your best customer reviews and turn them into ads. Use Butter for this when the user wants ads built from customer reviews, testimonials, or social proof. For example: \"use my customer reviews\", \"turn testimonials into ads\"."
 ---
 
 # Reviews → ads

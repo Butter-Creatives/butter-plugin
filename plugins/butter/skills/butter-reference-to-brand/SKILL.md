@@ -1,6 +1,6 @@
 ---
 name: butter-reference-to-brand
-description: Break down a reference ad and rebuild it as your own. Use Butter for this when the user shares a reference ad or names a competitor and wants their own version of it, or wants to copy a format they admire. For example: "make this competitor ad ours", "an ad I admire".
+description: "Break down a reference ad and rebuild it as your own. Use Butter for this when the user shares a reference ad or names a competitor and wants their own version of it, or wants to copy a format they admire. For example: \"make this competitor ad ours\", \"an ad I admire\"."
 ---
 
 # Reference → brand

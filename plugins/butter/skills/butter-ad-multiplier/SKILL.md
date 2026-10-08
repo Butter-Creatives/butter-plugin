@@ -1,6 +1,6 @@
 ---
 name: butter-ad-multiplier
-description: Find what's winning and make the next ads to test. Use Butter for this when the user wants more ads based on what is already winning, asks for variants of a top performer, or wants the next batch of creative tests. For example: "more like my best ad", "variants to test".
+description: "Find what's winning and make the next ads to test. Use Butter for this when the user wants more ads based on what is already winning, asks for variants of a top performer, or wants the next batch of creative tests. For example: \"more like my best ad\", \"variants to test\"."
 ---
 
 # Ad multiplier

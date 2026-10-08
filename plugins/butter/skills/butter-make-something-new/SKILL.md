@@ -1,6 +1,6 @@
 ---
 name: butter-make-something-new
-description: Make a new ad or video from scratch, or from assets you already have. Use Butter for this when the user wants an ad or video built from scratch, wants photos, clips or product shots they already have turned into an ad, or asks for an ad without saying what to start from. For example: "make me an ad", "I have photos and clips".
+description: "Make a new ad or video from scratch, or from assets you already have. Use Butter for this when the user wants an ad or video built from scratch, wants photos, clips or product shots they already have turned into an ad, or asks for an ad without saying what to start from. For example: \"make me an ad\", \"I have photos and clips\"."
 ---
 
 # Make something new
