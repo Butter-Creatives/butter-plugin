@@ -1,6 +1,6 @@
 ---
 name: butter-ugc-edit
-description: Cut raw UGC and talking-head clips into a captioned ad. Use Butter for this when the user has raw UGC, creator, testimonial or talking-head footage and wants it cut together into an ad, with captions, b-roll, overlays, a hook or an end card. For example: "edit my UGC clips into an ad", "cut these talking-head videos together".
+description: "Cut raw UGC and talking-head clips into a captioned ad. Use Butter for this when the user has raw UGC, creator, testimonial or talking-head footage and wants it cut together into an ad, with captions, b-roll, overlays, a hook or an end card. For example: \"edit my UGC clips into an ad\", \"cut these talking-head videos together\"."
 ---
 
 # UGC Maker

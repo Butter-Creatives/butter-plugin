@@ -1,6 +1,6 @@
 ---
 name: butter-static-to-motion
-description: Turn your best-performing static ads into motion ads. Use Butter for this when the user wants to animate an existing static ad, turn a finished static design into video, or add motion without changing a design. For example: "animate this static ad", "make my static ad move".
+description: "Turn your best-performing static ads into motion ads. Use Butter for this when the user wants to animate an existing static ad, turn a finished static design into video, or add motion without changing a design. For example: \"animate this static ad\", \"make my static ad move\"."
 ---
 
 # Static → motion

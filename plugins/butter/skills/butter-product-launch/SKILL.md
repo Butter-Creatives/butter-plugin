@@ -1,6 +1,6 @@
 ---
 name: butter-product-launch
-description: Launch a campaign for your newest product. Use Butter for this when the user is launching a new product. For example: "launch my new product", "we have a new product launching soon".
+description: "Launch a campaign for your newest product. Use Butter for this when the user is launching a new product. For example: \"launch my new product\", \"we have a new product launching soon\"."
 ---
 
 # Product launch

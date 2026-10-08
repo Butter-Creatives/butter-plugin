@@ -1,6 +1,6 @@
 ---
 name: butter-globalize
-description: Take a winning campaign and launch it in other markets. Use Butter for this when the user wants an existing campaign translated, localized, or launched in another market. For example: "run this in other markets", "localize my ad".
+description: "Take a winning campaign and launch it in other markets. Use Butter for this when the user wants an existing campaign translated, localized, or launched in another market. For example: \"run this in other markets\", \"localize my ad\"."
 ---
 
 # Globalize a winner
