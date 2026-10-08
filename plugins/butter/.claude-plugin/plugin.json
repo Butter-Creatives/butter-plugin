@@ -1,5 +1,6 @@
 {
   "name": "butter",
+  "version": "1.0.2",
   "description": "Turn a brief into an editable Butter video project.",
   "author": {
     "name": "Butter"
