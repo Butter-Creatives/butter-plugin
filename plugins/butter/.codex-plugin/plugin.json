@@ -16,7 +16,7 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Butter (Beta)",
+    "displayName": "Butter",
     "shortDescription": "Make editable videos",
     "longDescription": "Butter is the video editor that lets you and your team collaborate with AI. The Butter MCP can pull in your assets and context and help you create ads with professional motion. You can continue to edit any Butter project in the browser with full manual control: change copy, move things around on canvas, retime on the timeline, and more. Use AI to help you move fast without having to give up control.",
     "developerName": "Butter",
