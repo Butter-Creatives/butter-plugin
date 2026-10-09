@@ -55,3 +55,14 @@ which installs as **Butter (Staging)** alongside this one.
 Everything here is written by `yarn plugin:release` in the Butter monorepo (`modules/mcp`).
 Editing a `SKILL.md` here will be overwritten by the next release — change
 `modules/mcp/src/playbooks/` instead.
+
+## External services
+
+Butter relies on these third-party services:
+
+| Service | Used for |
+| --- | --- |
+| [Cloudinary](https://cloudinary.com) | CDN for images, video previews and uploaded assets |
+| [Mux](https://www.mux.com) | CDN for video streaming and thumbnails |
+| [fal.ai](https://fal.ai) | AI image and video generation |
+| [AssemblyAI](https://www.assemblyai.com) | Transcription for captions |
